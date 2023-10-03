@@ -19,6 +19,10 @@ unsafe fn remove_window_decorations(style_to_remove: u32) {
 }
 
 fn main() {
+    println!("Keybinds:");
+    println!("\tLEFT ALT + Q: Toggle decorations on active window\t");
+    println!("\tLEFT ALT + Z: Exit program");
+
     loop {
         unsafe {
             // LEFT ALT + Q
