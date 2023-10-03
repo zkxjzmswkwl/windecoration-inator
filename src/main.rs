@@ -1,4 +1,6 @@
 use core::time;
+use num_traits::PrimInt;
+use std::process::exit;
 use std::thread;
 
 use winapi::um::winuser::{
@@ -23,10 +25,15 @@ fn main() {
     println!("\tLEFT ALT + Q: Toggle decorations on active window\t");
     println!("\tLEFT ALT + Z: Exit program");
 
+    fn msb<N: PrimInt>(n: N) -> N {
+        let shift = std::mem::size_of::<N>() * 8 - 1;
+        (n >> shift) & N::one()
+    }
+
     loop {
         unsafe {
             // LEFT ALT + Q
-            if GetAsyncKeyState(0xA4) == -32767 && GetAsyncKeyState(0x51) == 32767 {
+            if GetAsyncKeyState(0xA4) == -32767 && GetAsyncKeyState(0x51) == -32767 {
                 // Yes, these need to be in this order.
                 // And yes, they need to be called individually.
                 // Some windows (D3d-11/12 games in particular) freak the fuck out otherwise.
@@ -36,7 +43,8 @@ fn main() {
             }
 
             // LEFT ALT + Z
-            if GetAsyncKeyState(0xA4) == -32767 && GetAsyncKeyState(0x5A) == 32767 {
+            if msb(GetAsyncKeyState(0xA4)) > 0 && msb(GetAsyncKeyState(0x5A)) > 0 & 1 {
+                println!("?");
                 break;
             }
         }
